@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "798013916640",
+    "firebase_url": "https://multiple-geofences.firebaseio.com",
+    "project_id": "multiple-geofences",
+    "storage_bucket": "multiple-geofences.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798013916640:android:16fc13f513f30a820b1785",
+        "android_client_info": {
+          "package_name": "com.sameeksha.multiplegeofences"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "798013916640-3ff8hhkhbaekjtj4oabiengmmho38r72.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5yWdBE2us4-LWq4v7UGcwnw0O5w12Gss"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "798013916640-3ff8hhkhbaekjtj4oabiengmmho38r72.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
