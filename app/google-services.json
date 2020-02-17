@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "798013916640-gpf1sv6djr4niu87pnevrp3arak5l21k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sameeksha.multiplegeofences",
+            "certificate_hash": "53dc86868ce21caa2e30f59c0fcd2636632b0227"
+          }
+        },
+        {
           "client_id": "798013916640-3ff8hhkhbaekjtj4oabiengmmho38r72.apps.googleusercontent.com",
           "client_type": 3
         }
