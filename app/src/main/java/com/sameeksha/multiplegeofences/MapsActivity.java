@@ -12,10 +12,16 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
@@ -45,6 +51,9 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import org.w3c.dom.Text;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -59,6 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DatabaseReference myLocationRef;
     private GeoFire geoFire;
     private List<LatLng> dangerous_areas;
+    private EditText address;
+    private String location;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,9 +93,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mapFragment.getMapAsync(MapsActivity.this);
 
 
-                        initArea();
+                        //initArea();
 
-                        settingGeofire();
+                       settingGeofire();
 
                     }
 
@@ -100,12 +111,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }).check();
     }
+    public  void onClick(View view)
+    {   address=(EditText)findViewById(R.id.search);
+        location=address.getText().toString();
+        System.out.println(location);
+        initArea();
+       // settingGeofire();
+    }
 
-    private void initArea() {
-        dangerous_areas=new ArrayList<>();
-        dangerous_areas.add(new LatLng(28.4744,77.5040));
-        dangerous_areas.add(new LatLng(28.4764,77.4944));
-        dangerous_areas.add(new LatLng(28.4800,77.4946));
+
+            private void initArea() {
+
+
+
+                   // EditText address=(EditText)findViewById(R.id.search);
+                  //  String location=address.getText().toString();
+                   // System.out.println(location);
+                List<Address> addressesList=null;
+
+                if(!(TextUtils.isEmpty(location)))
+                  {
+                      Geocoder geocoder=new Geocoder(MapsActivity.this);
+                      try {
+                          addressesList=geocoder.getFromLocationName(location,8);
+//System.out.println(addressesList);
+                      }
+
+                      catch (IOException e)
+                      {
+                          e.printStackTrace();
+                      }
+
+                      for(int i=0;i<addressesList.size();i++)
+                      {
+                          Address useraddress=addressesList.get(i);
+                          dangerous_areas=new ArrayList<>();
+
+                          dangerous_areas.add(new LatLng(useraddress.getLatitude(),useraddress.getLongitude()));
+                       //   System.out.println(dangerous_areas);
+                          for (LatLng latLng : dangerous_areas) {
+
+                              mMap.addCircle(new CircleOptions().center(latLng)
+                                      .radius(500)
+                                      .strokeColor(Color.BLUE)
+                                      .fillColor(0x22000FF)
+                                      .strokeWidth(5.05f)
+                              );
+
+                              //Create GeoQuery for user in danger location
+
+                              GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 0.5f);//500m
+                              geoQuery.addGeoQueryEventListener(MapsActivity.this);
+                          }
+
+                      }
+                     // fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                  }
+
+
+
+        }
+
 
 
       /*  {mMap.addCircle(new CircleOptions().center(latLng)
@@ -118,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             geoQuery.addGeoQueryEventListener(MapsActivity.this);
         }*/
 
-        }
+
 
     private void settingGeofire() {
 
@@ -186,21 +252,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-//addcicle for danger
-            for (LatLng latLng : dangerous_areas) {
-                mMap.addCircle(new CircleOptions().center(latLng)
-                        .radius(500)
+  //addcicle for danger
+        System.out.println(dangerous_areas);
+          /* for (LatLng latLng : dangerous_areas) {
+
+               mMap.addCircle(new CircleOptions().center(latLng)
+                       .radius(500)
                         .strokeColor(Color.BLUE)
-                        .fillColor(0x22000FF)
-                        .strokeWidth(5.05f)
+                      .fillColor(0x22000FF)
+                      .strokeWidth(5.05f)
                 );
 
                 //Create GeoQuery for user in danger location
 
                 GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 0.5f);//500m
-                geoQuery.addGeoQueryEventListener(MapsActivity.this);
-            }
-        }
+              geoQuery.addGeoQueryEventListener(MapsActivity.this);
+            }*/
+       }
 
 
 
@@ -209,6 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onStop() {
         fusedLocationProviderClient.removeLocationUpdates(locationCallback);
         super.onStop();
+
     }
 
     @Override
