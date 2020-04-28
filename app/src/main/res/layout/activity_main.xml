@@ -22,11 +22,12 @@
 
     <TextView
         android:id="@+id/geofencing_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="248dp"
+        android:layout_height="32dp"
         android:layout_marginTop="60dp"
-        android:text="Try Geofencing here!"
+        android:text="  CREATE GEOFENCES"
         android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -47,4 +48,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/geofencing_link"
         app:layout_constraintVertical_bias="0.903" />
+
+    <TextView
+        android:id="@+id/addcontacts"
+        android:layout_width="234dp"
+        android:layout_height="31dp"
+        android:text="     CONTACT LIST"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/geofencing_link"
+        app:layout_constraintVertical_bias="0.134" />
+
+    <TextView
+        android:id="@+id/emergencylist"
+        android:layout_width="332dp"
+        android:layout_height="38dp"
+        android:text="   EMERGENCY CONTACT LIST"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addcontacts"
+        app:layout_constraintVertical_bias="0.178" />
 </androidx.constraintlayout.widget.ConstraintLayout>

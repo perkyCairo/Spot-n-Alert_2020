@@ -133,7 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                   {
                       Geocoder geocoder=new Geocoder(MapsActivity.this);
                       try {
-                          addressesList=geocoder.getFromLocationName(location,8);
+                          addressesList=geocoder.getFromLocationName(location,8);//geocoder gets  the coordinates from the address
 //System.out.println(addressesList);
                       }
 
@@ -294,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onKeyMoved(String key, GeoLocation location) {
-        sendNotification("You",String.format("%s moving within dangerous area",key));
+        sendNotification("You",String.format("%s are moving within dangerous area",key));
     }
 
     @Override
