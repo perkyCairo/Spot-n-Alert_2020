@@ -1,9 +1,13 @@
 package com.sameeksha.multiplegeofences;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,6 +22,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -41,9 +46,14 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -56,6 +66,7 @@ import org.w3c.dom.Text;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GeoQueryEventListener {
@@ -70,11 +81,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<LatLng> dangerous_areas;
     private EditText address;
     private String location;
+    private  DatabaseReference databaseReference;
+   private FirebaseUser firebaseUser;
+   private FirebaseAuth firebaseAuth;
+    private  String contactnumber="";
+    String contact="";
+    String contact1="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
+        firebaseUser=firebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase database =FirebaseDatabase.getInstance();
+        databaseReference= database.getReference("Users").child(firebaseUser.getUid()).child("Emergency contacts");
+        ActivityCompat.requestPermissions(MapsActivity.this,new String[]{Manifest.permission.SEND_SMS,Manifest.permission.READ_SMS},PackageManager.PERMISSION_GRANTED);
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
@@ -91,7 +111,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                                 .findFragmentById(R.id.map);
                         mapFragment.getMapAsync(MapsActivity.this);
-
+//mMap.setMyLocationEnabled(true);
 
                         //initArea();
 
@@ -114,12 +134,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public  void onClick(View view)
     {   address=(EditText)findViewById(R.id.search);
         location=address.getText().toString();
-        System.out.println(location);
+        //System.out.println(location);
         initArea();
        // settingGeofire();
     }
+//String contactnumber="";
+public  void sendsms() {
 
 
+    databaseReference.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+            for(DataSnapshot childsnop : dataSnapshot.getChildren()) {
+                contact="";
+                contactnumber="";
+                contact = childsnop.child("emergency").getValue(String.class);
+
+             //   Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
+
+                System.out.println(contact);
+               //contact.trim();
+               contact1=contact.replaceAll("\\s","");
+                System.out.println(contact1);
+
+                int last = contact1.lastIndexOf(" ");
+                if(contact1.charAt(last+1)=='+')
+                {
+                    for( int i=last+1;i<contact1.length();i++)
+                    {
+                        contactnumber=contactnumber+contact1.charAt(i);
+                    }
+                }
+                else {
+                    for (int i = last+1; i < contact1.length(); i++) {
+                        contactnumber = contactnumber +contact1.charAt(i);
+
+                    }
+                }
+                System.out.println(contactnumber);
+                SmsManager manager=SmsManager.getDefault();
+                manager.sendTextMessage(contactnumber,null,"hi",null,null);
+
+
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+        }
+
+
+    });
+
+
+}
             private void initArea() {
 
 
@@ -149,6 +219,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                           dangerous_areas.add(new LatLng(useraddress.getLatitude(),useraddress.getLongitude()));
                        //   System.out.println(dangerous_areas);
+                          if( geoFire!=null)
+                              geoFire=new GeoFire(myLocationRef);
                           for (LatLng latLng : dangerous_areas) {
 
                               mMap.addCircle(new CircleOptions().center(latLng)
@@ -188,7 +260,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void settingGeofire() {
 
-        myLocationRef= FirebaseDatabase.getInstance().getReference("MyLocation");
+        myLocationRef= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("Mylocation");
         geoFire=new GeoFire(myLocationRef);
     }
 
@@ -283,6 +355,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onKeyEntered(String key, GeoLocation location) {
         sendNotification("You",String.format("%s entered into the dangerous area",key));
+        sendsms();
     }
 
     @Override

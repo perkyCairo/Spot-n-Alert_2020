@@ -21,6 +21,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -30,13 +35,20 @@ public class ContactList extends AppCompatActivity {
     ArrayList<String> arrayList;
     ArrayAdapter arrayAdapter;
     ArrayList<String> EmergencyList;
+    FirebaseAuth firebaseAuth;
+    private DatabaseReference databaseReference;
+    FirebaseDatabase firebaseDatabase;
+    FirebaseUser firebaseUser;
+   private EditText search;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_list);
         l1=(ListView)findViewById(R.id.contactlist);
         arrayList=new ArrayList<>();
-        EmergencyList=new ArrayList<>();
+    // String   EmergencyList;
+
+        search=(EditText)findViewById(R.id.seachbar);
 
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M
                 && checkSelfPermission(Manifest.permission.READ_CONTACTS)
@@ -47,7 +59,32 @@ public class ContactList extends AppCompatActivity {
         else
         {
             getContact();
-        }
+            search.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if(s.toString().equals(""))
+                    {
+                        getContact();
+                    }
+                    else {
+                        (ContactList.this).arrayAdapter.getFilter().filter(s);
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
+
+        }firebaseUser=firebaseAuth.getInstance().getCurrentUser();
+        databaseReference= FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
     }
 
@@ -98,10 +135,18 @@ public class ContactList extends AppCompatActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        EmergencyList.add(str1);
+                      //  EmergencyList.add(str1);
+                        saveEmergencycontact(str1);
                         Toast.makeText(ContactList.this,"Added successfully!",Toast.LENGTH_SHORT).show();
 System.out.println(EmergencyList);
 
+                    }
+
+                    private void saveEmergencycontact(String str) {
+                        //FirebaseUser user=firebaseAuth.getCurrentUser();
+                        String id= databaseReference.push().getKey();
+                        emergencyobject ob= new emergencyobject(str);
+                      databaseReference.child("Emergency contacts/"+id).setValue(ob);
                     }
 
                 })
