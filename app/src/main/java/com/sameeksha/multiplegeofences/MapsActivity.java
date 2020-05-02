@@ -332,6 +332,7 @@ Toast.makeText(this,""+error.getMessage(),Toast.LENGTH_SHORT).show();
                 .setContentText(content)
                 .setAutoCancel(false)
                 .setSmallIcon(R.mipmap.ic_launcher )
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         Notification notification=builder.build();
         notificationManager.notify(new Random().nextInt(),notification);
