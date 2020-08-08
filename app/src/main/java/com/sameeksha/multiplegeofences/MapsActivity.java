@@ -87,10 +87,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private  String contactnumber="";
     String contact="";
     String contact1="";
+    double lat, lon;
+    String message="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        this.setTitle("Geofences");
         firebaseUser=firebaseAuth.getInstance().getCurrentUser();
         FirebaseDatabase database =FirebaseDatabase.getInstance();
         databaseReference= database.getReference("Users").child(firebaseUser.getUid()).child("Emergency contacts");
@@ -140,7 +143,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 //String contactnumber="";
 public  void sendsms() {
-
+    message="Entered a dangerous -> " +
+            "http://maps.google.com/maps?saddr="+lat+","+lon;
 
     databaseReference.addValueEventListener(new ValueEventListener() {
         @Override
@@ -174,7 +178,7 @@ public  void sendsms() {
                 }
                 System.out.println(contactnumber);
                 SmsManager manager=SmsManager.getDefault();
-                manager.sendTextMessage(contactnumber,null,"hi",null,null);
+                manager.sendTextMessage(contactnumber,null,message,null,null);
 
 
             }
@@ -221,12 +225,12 @@ public  void sendsms() {
                        //   System.out.println(dangerous_areas);
                           if( geoFire!=null)
                               geoFire=new GeoFire(myLocationRef);
-                          for (LatLng latLng : dangerous_areas) {
+                        for (LatLng latLng : dangerous_areas) {
 
-                              mMap.addCircle(new CircleOptions().center(latLng)
-                                      .radius(500)
-                                      .strokeColor(Color.BLUE)
-                                      .fillColor(0x22000FF)
+                             mMap.addCircle(new CircleOptions().center(latLng)
+                                     .radius(500)
+                                             .strokeColor(Color.BLUE)
+                                             .fillColor(0x22000FF)
                                       .strokeWidth(5.05f)
                               );
 
@@ -283,7 +287,8 @@ public  void sendsms() {
                                 .position(new LatLng(locationResult.getLastLocation().getLatitude(),
                                         locationResult.getLastLocation().getLongitude()))
                                 .title("You"));
-
+lat=locationResult.getLastLocation().getLatitude();
+lon=locationResult.getLastLocation().getLatitude();
                         mMap.animateCamera(CameraUpdateFactory
                                 .newLatLngZoom(currentuser.getPosition(),12.0f));
 
@@ -326,7 +331,7 @@ public  void sendsms() {
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
   //addcicle for danger
         System.out.println(dangerous_areas);
-          /* for (LatLng latLng : dangerous_areas) {
+         /*  for (LatLng latLng : dangerous_areas) {
 
                mMap.addCircle(new CircleOptions().center(latLng)
                        .radius(500)
@@ -382,6 +387,9 @@ Toast.makeText(this,""+error.getMessage(),Toast.LENGTH_SHORT).show();
 
     private void sendNotification(String title, String content) {
 
+       // double lat = String. valueOf(location.getA;
+        //double lon = location.getLongitude();
+
         String Notification_id="you_multiple_location";
         NotificationManager notificationManager=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -406,8 +414,12 @@ Toast.makeText(this,""+error.getMessage(),Toast.LENGTH_SHORT).show();
                 .setAutoCancel(false)
                 .setSmallIcon(R.mipmap.ic_launcher )
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true)
+
+
     .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         Notification notification=builder.build();
         notificationManager.notify(new Random().nextInt(),notification);
     }
+
 }

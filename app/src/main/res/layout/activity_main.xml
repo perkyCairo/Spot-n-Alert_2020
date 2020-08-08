@@ -7,33 +7,20 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Congratulations! You have succesfully logged in."
-        android:textAlignment="center"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.226" />
-
-    <TextView
         android:id="@+id/geofencing_link"
         android:layout_width="248dp"
         android:layout_height="32dp"
-        android:layout_marginTop="60dp"
-        android:text="  CREATE GEOFENCES"
+        android:layout_marginBottom="452dp"
+        android:text="CREATE GEOFENCES"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/signout_button"
@@ -53,7 +40,9 @@
         android:id="@+id/addcontacts"
         android:layout_width="234dp"
         android:layout_height="31dp"
-        android:text="     CONTACT LIST"
+        android:text="CONTACT LIST"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -61,19 +50,47 @@
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/geofencing_link"
-        app:layout_constraintVertical_bias="0.134" />
+        app:layout_constraintVertical_bias="0.14" />
 
     <TextView
         android:id="@+id/emergencylist"
         android:layout_width="332dp"
         android:layout_height="38dp"
-        android:text="   EMERGENCY CONTACT LIST"
+        android:text="EMERGENCY CONTACT LIST"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/addcontacts"
-        app:layout_constraintVertical_bias="0.178" />
+        app:layout_constraintVertical_bias="0.169" />
+
+    <TextView
+        android:id="@+id/dailnumbers"
+        android:layout_width="273dp"
+        android:layout_height="74dp"
+        android:text="CALL HELPLINE NUMBERS"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emergencylist"
+        app:layout_constraintVertical_bias="0.179" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.3"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/backgroundandroid"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

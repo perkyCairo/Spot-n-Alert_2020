@@ -44,7 +44,11 @@ public class Emergencylist extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_emergencylist);
+        this.setTitle("Emergency Contact List");
+
+
 
 //l2.setAdapter(arrayAdapter);
         firebaseUser = firebaseAuth.getInstance().getCurrentUser();

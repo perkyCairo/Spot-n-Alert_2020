@@ -18,7 +18,9 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_launcher);
+        this.setTitle("Spot-n-Alert");
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser  = myFirebaseAuth.getCurrentUser();
         if (myFirebaseUser != null)

@@ -32,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        this.setTitle("Login");
 
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser  = myFirebaseAuth.getCurrentUser();
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
                             //checkEmailVerification();
                             finish();
                             startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                            Toast.makeText(LoginActivity.this,"Successfully logged in",Toast.LENGTH_SHORT).show();
                             Intent intent= new Intent();
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             // startActivity(new Intent(SignInActivity.this,WelcomeActivity.class));

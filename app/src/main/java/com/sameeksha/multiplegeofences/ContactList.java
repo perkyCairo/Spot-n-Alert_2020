@@ -43,7 +43,9 @@ public class ContactList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_contact_list);
+        this.setTitle("Contact List");
         l1=(ListView)findViewById(R.id.contactlist);
         arrayList=new ArrayList<>();
     // String   EmergencyList;
