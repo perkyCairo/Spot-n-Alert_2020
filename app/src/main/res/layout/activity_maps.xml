@@ -9,23 +9,40 @@
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
+
       <EditText
           android:id="@+id/search"
           android:layout_width="314dp"
           android:layout_height="50dp"
           android:layout_alignParentStart="true"
           android:layout_alignParentTop="true"
+          android:layout_marginStart="-2dp"
+          android:layout_marginTop="0dp"
           android:ems="10"
-          android:hint="search danger location"/>
+          android:padding="10dp"
+          android:hint="search and add unsafe area" />
 
-      <ImageButton
+      <ImageView
           android:id="@+id/add"
-          android:layout_width="60dp"
-          android:layout_height="50dp"
-          android:layout_alignParentEnd="true"
+          android:layout_width="54dp"
+          android:layout_height="36dp"
           android:layout_alignParentTop="true"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="3dp"
+          android:layout_marginEnd="49dp"
           android:onClick="onClick"
-          android:src="@mipmap/search"/>
+          android:src="@drawable/add" />
+
+      <ImageView
+          android:id="@+id/imageButton"
+          android:layout_width="54dp"
+          android:layout_height="50dp"
+          android:layout_alignParentTop="true"
+          android:layout_alignParentEnd="true"
+          android:layout_marginTop="-1dp"
+          android:layout_marginEnd="6dp"
+          android:src="@drawable/delete"
+          android:onClick="delete"/>
   </RelativeLayout>
 
     <fragment
@@ -39,6 +56,8 @@
         android:layout_marginStart="-3dp"
         android:layout_marginTop="48dp"
         tools:context=".MapsActivity" />
+
+
 
 
 </RelativeLayout>

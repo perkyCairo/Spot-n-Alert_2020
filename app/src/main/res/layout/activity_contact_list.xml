@@ -5,14 +5,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ContactList">
+    tools:context=".ContactList"
+    android:background="@drawable/backgroung"
+    android:alpha="0.9">
 
     <EditText
         android:id="@+id/seachbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:hint="Search contact"
-        android:textColorHint="@android:color/black"
+        android:textColorHint="@android:color/white"
+        android:textColor="@android:color/white"
         android:layout_marginLeft="10dp"/>
 
     <ListView
@@ -25,8 +28,10 @@
         android:layout_marginTop="1dp"
         android:layout_marginEnd="-7dp"
         android:layout_marginBottom="5dp"
+        android:layout_marginLeft="50dp"
+
         />
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +39,7 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/backgroundandroid"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteY="0dp" /> -->
 
 
 </RelativeLayout>

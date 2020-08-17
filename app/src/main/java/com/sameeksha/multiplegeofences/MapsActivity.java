@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -34,6 +35,7 @@ import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -46,6 +48,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -72,6 +76,7 @@ import java.util.Random;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GeoQueryEventListener {
 
     private GoogleMap mMap;
+    private GeofencingClient geofencingClient;
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -82,8 +87,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private EditText address;
     private String location;
     private  DatabaseReference databaseReference;
+    private  DatabaseReference databaseReference1;
+    private  DatabaseReference databaseReference2;
    private FirebaseUser firebaseUser;
    private FirebaseAuth firebaseAuth;
+   private List<Address> addressesList=null;
     private  String contactnumber="";
     String contact="";
     String contact1="";
@@ -94,10 +102,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         this.setTitle("Geofences");
-        firebaseUser=firebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase database =FirebaseDatabase.getInstance();
-        databaseReference= database.getReference("Users").child(firebaseUser.getUid()).child("Emergency contacts");
-        ActivityCompat.requestPermissions(MapsActivity.this,new String[]{Manifest.permission.SEND_SMS,Manifest.permission.READ_SMS},PackageManager.PERMISSION_GRANTED);
+        PendingIntent pendingIntent;
+
+
+        geofencingClient = LocationServices.getGeofencingClient(this);
+        firebaseUser = firebaseAuth.getInstance().getCurrentUser();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        databaseReference1 = database.getReference("Users").child(firebaseUser.getUid());
+        databaseReference = database.getReference("Users").child(firebaseUser.getUid()).child("Emergency contacts");
+
+        ActivityCompat.requestPermissions(MapsActivity.this, new String[]{Manifest.permission.SEND_SMS, Manifest.permission.READ_SMS}, PackageManager.PERMISSION_GRANTED);
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
@@ -108,7 +122,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         buildLocationRequest();
                         buildLocationCallback();
-                        fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(MapsActivity.this);
+                        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(MapsActivity.this);
 
 
                         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -118,7 +132,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         //initArea();
 
-                       settingGeofire();
+                        settingGeofire();
+
+
+
+                       /* CircleOptions circleOptions = new CircleOptions();
+                        circleOptions.center(new LatLng(79.2487208, 28.220080799999998));
+                        circleOptions.radius(1000);
+                        circleOptions.strokeColor(Color.argb(255, 225, 0, 0))
+                                .fillColor(Color.argb(64, 225, 0, 0))
+                                .strokeWidth(4f);
+                        mMap.addCircle(circleOptions);*/
 
                     }
 
@@ -133,9 +157,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     }
                 }).check();
+
     }
     public  void onClick(View view)
-    {   address=(EditText)findViewById(R.id.search);
+    {
+
+
+
+        address=(EditText)findViewById(R.id.search);
         location=address.getText().toString();
         //System.out.println(location);
         initArea();
@@ -143,8 +172,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 //String contactnumber="";
 public  void sendsms() {
-    message="Entered a dangerous -> " +
-            "http://maps.google.com/maps?saddr="+lat+","+lon;
+    message="Entered a unsafe area -> " +
+            "http://maps.google.com/maps?q="+lat+","+lon+"&z=13 & saddr="+lat+","+lon;
 
     databaseReference.addValueEventListener(new ValueEventListener() {
         @Override
@@ -201,7 +230,7 @@ public  void sendsms() {
                    // EditText address=(EditText)findViewById(R.id.search);
                   //  String location=address.getText().toString();
                    // System.out.println(location);
-                List<Address> addressesList=null;
+
 
                 if(!(TextUtils.isEmpty(location)))
                   {
@@ -218,20 +247,35 @@ public  void sendsms() {
 
                       for(int i=0;i<addressesList.size();i++)
                       {
+                          if(i==1)
+                          continue;
                           Address useraddress=addressesList.get(i);
                           dangerous_areas=new ArrayList<>();
+                         lat=useraddress.getLatitude();
+                         lon=useraddress.getLongitude();
 
                           dangerous_areas.add(new LatLng(useraddress.getLatitude(),useraddress.getLongitude()));
+
+
+
+                          String id= databaseReference1.push().getKey();
+                          savingLocation locationsave=new savingLocation(useraddress.getLongitude(),useraddress.getLatitude());
+                         // emergencyobject ob= new emergencyobject(str);
+                          databaseReference1.child("GEOFENCES").child("Geofence/"+id).setValue(locationsave);
+
+
+
                        //   System.out.println(dangerous_areas);
                           if( geoFire!=null)
                               geoFire=new GeoFire(myLocationRef);
                         for (LatLng latLng : dangerous_areas) {
 
                              mMap.addCircle(new CircleOptions().center(latLng)
-                                     .radius(500)
-                                             .strokeColor(Color.BLUE)
-                                             .fillColor(0x22000FF)
-                                      .strokeWidth(5.05f)
+                                     .radius(1000)
+                                             .strokeColor(Color.argb(255,225,0,0))
+                                             .fillColor(Color.argb(64,225,0,0))
+                                      .strokeWidth(4f)
+
                               );
 
                               //Create GeoQuery for user in danger location
@@ -250,15 +294,6 @@ public  void sendsms() {
 
 
 
-      /*  {mMap.addCircle(new CircleOptions().center(latLng)
-                .radius(500)
-                .strokeColor(Color.BLUE)
-                .fillColor(0x22000FF)
-                .strokeWidth(5.05f)
-        );
-            GeoQuery geoQuery=geoFire.queryAtLocation(new GeoLocation(latLng.latitude,latLng.longitude),0.5f) ;//500m
-            geoQuery.addGeoQueryEventListener(MapsActivity.this);
-        }*/
 
 
 
@@ -291,6 +326,8 @@ lat=locationResult.getLastLocation().getLatitude();
 lon=locationResult.getLastLocation().getLatitude();
                         mMap.animateCamera(CameraUpdateFactory
                                 .newLatLngZoom(currentuser.getPosition(),12.0f));
+                        Toast.makeText(MapsActivity.this,"Tip: Enter the location to create geofence",Toast.LENGTH_LONG).show();
+
 
                     }
                 });
@@ -301,6 +338,8 @@ lon=locationResult.getLastLocation().getLatitude();
 
 
         };
+
+
 
     }
 
@@ -317,9 +356,13 @@ lon=locationResult.getLastLocation().getLatitude();
 
     @Override
     public void onMapReady(GoogleMap googleMap){
+       // dangerous_areas=new ArrayList<>();
+        //System.out.println(dangerous_areas);
+        //dangerous_areas.add(new LatLng(  28.220080799999998,79.2487208 ));
             mMap = googleMap;
 
             mMap.getUiSettings().setZoomControlsEnabled(true);
+
 
 
             if (fusedLocationProviderClient != null)
@@ -329,23 +372,51 @@ lon=locationResult.getLastLocation().getLatitude();
                     }
                 }
             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
-  //addcicle for danger
-        System.out.println(dangerous_areas);
-         /*  for (LatLng latLng : dangerous_areas) {
 
-               mMap.addCircle(new CircleOptions().center(latLng)
-                       .radius(500)
-                        .strokeColor(Color.BLUE)
-                      .fillColor(0x22000FF)
-                      .strokeWidth(5.05f)
-                );
+
+  //addcicle for danger
+
+
+
+/*HARDCODE-------------
+
+               mMap.addCircle(new CircleOptions().center(new LatLng(28.220080799999998,79.2487208))
+                       .radius(1000)
+                               .strokeColor(Color.argb(255,225,0,0))
+                               .fillColor(Color.argb(64,225,0,0))
+                               .strokeWidth(4f)
+
+               );
 
                 //Create GeoQuery for user in danger location
 
-                GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 0.5f);//500m
-              geoQuery.addGeoQueryEventListener(MapsActivity.this);
-            }*/
-       }
+                GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(28.220080799999998, 79.2487208), 0.5f);//500m
+             geoQuery.addGeoQueryEventListener(MapsActivity.this);
+
+               mMap.addCircle(new CircleOptions().center(new LatLng(28.220541899999997,79.2891566))
+                       .radius(1000)
+                               .strokeColor(Color.argb(255,225,0,0))
+                               .fillColor(Color.argb(64,225,0,0))
+                               .strokeWidth(4f)
+
+               );
+
+
+
+
+                mMap.addCircle(new CircleOptions().center(new LatLng( 28.2310932 ,79.3176845))
+                       .radius(1000)
+                               .strokeColor(Color.argb(255,225,0,0))
+                               .fillColor(Color.argb(64,225,0,0))
+                               .strokeWidth(4f)
+
+               );
+
+               */
+
+
+    }
+
 
 
 
@@ -366,6 +437,7 @@ lon=locationResult.getLastLocation().getLatitude();
     @Override
     public void onKeyExited(String key) {
         sendNotification("You",String.format("%s left the dangerous area",key));
+        sendsms();
     }
 
 
@@ -373,6 +445,7 @@ lon=locationResult.getLastLocation().getLatitude();
     @Override
     public void onKeyMoved(String key, GeoLocation location) {
         sendNotification("You",String.format("%s are moving within dangerous area",key));
+        sendsms();
     }
 
     @Override
@@ -396,7 +469,7 @@ Toast.makeText(this,""+error.getMessage(),Toast.LENGTH_SHORT).show();
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
         {
             NotificationChannel notificationChannel= new NotificationChannel(Notification_id,"My Notification",
-                    NotificationManager.IMPORTANCE_DEFAULT);
+                    NotificationManager.IMPORTANCE_HIGH);
 
             //config
 
@@ -413,13 +486,21 @@ Toast.makeText(this,""+error.getMessage(),Toast.LENGTH_SHORT).show();
                 .setContentText(content)
                 .setAutoCancel(false)
                 .setSmallIcon(R.mipmap.ic_launcher )
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
+
 
 
     .setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         Notification notification=builder.build();
         notificationManager.notify(new Random().nextInt(),notification);
     }
+    public void delete(View view)
+    {
+        mMap.clear();
+
+    databaseReference1.child("GEOFENCES").removeValue();
+
+            }
 
 }

@@ -1,12 +1,200 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+      android:weightSum="10"
+      android:orientation="vertical">
 
-    <TextView
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="82dp"
+          android:layout_weight="2"
+          android:background="@drawable/backgroung">
+
+
+         <ImageView
+             android:id="@+id/imageView4"
+             android:layout_width="184dp"
+             android:layout_height="158dp"
+             android:layout_alignParentStart="true"
+             android:layout_alignParentEnd="true"
+             android:layout_alignParentBottom="true"
+             android:layout_marginStart="114dp"
+             android:layout_marginEnd="113dp"
+             android:layout_marginBottom="22dp"
+             app:srcCompat="@drawable/icon" />
+      </RelativeLayout>
+
+      <GridLayout
+
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:layout_weight="8"
+          android:alignmentMode="alignMargins"
+          android:columnCount="2"
+          android:padding="14dp"
+          android:rowCount="2">
+
+         <androidx.cardview.widget.CardView
+             android:id="@+id/geofences1"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:layout_rowWeight="1"
+             android:layout_columnWeight="1"
+             android:layout_marginLeft="16dp"
+             android:layout_marginRight="16dp"
+             android:layout_marginBottom="16dp"
+             app:cardElevation="20dp"
+
+             >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="130dp"
+                   android:layout_gravity="center_horizontal"
+                   android:src="@drawable/geofences"></ImageView>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Create Geofence"
+                   android:textAlignment="center"
+                   android:textColor="@android:color/black"
+                   android:textSize="18sp"
+                   android:textStyle="bold"></TextView>
+            </LinearLayout>
+         </androidx.cardview.widget.CardView>
+
+         <androidx.cardview.widget.CardView
+             android:id="@+id/emergencycontact1"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:layout_rowWeight="1"
+             android:layout_columnWeight="1"
+             android:layout_marginLeft="16dp"
+             android:layout_marginRight="16dp"
+             android:layout_marginBottom="16dp"
+             app:cardElevation="20dp"
+
+             >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="130dp"
+                   android:layout_gravity="center_horizontal"
+                   android:src="@drawable/emergency_contacts"></ImageView>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="Emergency Contacts"
+                   android:textAlignment="center"
+                   android:textColor="@android:color/black"
+                   android:textSize="18sp"
+                   android:textStyle="bold"></TextView>
+            </LinearLayout>
+         </androidx.cardview.widget.CardView>
+
+         <androidx.cardview.widget.CardView
+             android:id="@+id/phonebook1"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:layout_rowWeight="1"
+             android:layout_columnWeight="1"
+             android:layout_marginLeft="16dp"
+             android:layout_marginRight="16dp"
+             android:layout_marginBottom="16dp"
+             app:cardElevation="20dp"
+
+             >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="130dp"
+                   android:layout_gravity="center_horizontal"
+                   android:src="@drawable/contact2"></ImageView>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="  PhoneBook"
+                   android:textAlignment="center"
+                   android:textColor="@android:color/black"
+                   android:textSize="18sp"
+                   android:textStyle="bold"></TextView>
+            </LinearLayout>
+         </androidx.cardview.widget.CardView>
+
+         <androidx.cardview.widget.CardView
+             android:id="@+id/helplinenumbers1"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             android:layout_rowWeight="1"
+             android:layout_columnWeight="1"
+             android:layout_marginLeft="16dp"
+             android:layout_marginRight="16dp"
+             android:layout_marginBottom="16dp"
+             app:cardElevation="20dp"
+
+             >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="130dp"
+                   android:layout_gravity="center_horizontal"
+                   android:src="@drawable/helpline"></ImageView>
+
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:text="HelpLine Numbers"
+                   android:textAlignment="center"
+                   android:textColor="@android:color/black"
+                   android:textSize="18sp"
+                   android:textStyle="bold"></TextView>
+            </LinearLayout>
+         </androidx.cardview.widget.CardView>
+
+      </GridLayout>
+
+   </LinearLayout>
+
+   <!-- <TextView
         android:id="@+id/geofencing_link"
         android:layout_width="248dp"
         android:layout_height="32dp"
@@ -92,5 +280,5 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/backgroundandroid"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        tools:layout_editor_absoluteY="0dp" />-->
+</RelativeLayout>

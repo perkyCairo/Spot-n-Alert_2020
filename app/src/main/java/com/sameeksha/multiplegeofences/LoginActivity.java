@@ -24,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText uname,upass;
     Button login_bn;
     TextView tv;
+    TextView resetpass;
     private FirebaseAuth myFirebaseAuth;
     private FirebaseUser myFirebaseUser;
 
@@ -79,6 +80,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(LoginActivity.this,SignupActivity.class);
+                startActivity(i);
+            }
+        });
+        resetpass = findViewById(R.id.text_view_Reset);
+        resetpass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(LoginActivity.this,ResetPassword.class);
                 startActivity(i);
             }
         });

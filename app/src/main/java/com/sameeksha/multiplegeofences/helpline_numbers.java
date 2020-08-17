@@ -21,7 +21,7 @@ public class helpline_numbers extends AppCompatActivity {
         setContentView(R.layout.activity_helpline_numbers);
         this.setTitle("Helpline Numbers");
         ListView listView=(ListView) findViewById(R.id.helpline_numbers);
-        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,helplinenumbers);
+        ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(this,R.layout.modification_list,helplinenumbers);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

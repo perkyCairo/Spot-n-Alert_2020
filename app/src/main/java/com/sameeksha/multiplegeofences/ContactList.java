@@ -43,6 +43,7 @@ public class ContactList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toast.makeText(ContactList.this,"Tip: Tap on the contact to add to Emergency contacts",Toast.LENGTH_LONG).show();
 
         setContentView(R.layout.activity_contact_list);
         this.setTitle("Contact List");
@@ -99,7 +100,7 @@ public class ContactList extends AppCompatActivity {
             String mobile=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
             arrayList.add(name+"\n"+mobile);
             Collections.sort(arrayList);
-            arrayAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,arrayList);
+            arrayAdapter=new ArrayAdapter<String>(this,R.layout.modification_list,arrayList);
             //l1.setAdapter(arrayList);
             l1.setAdapter(arrayAdapter);
             l1.setOnItemClickListener(new AdapterView.OnItemClickListener() {

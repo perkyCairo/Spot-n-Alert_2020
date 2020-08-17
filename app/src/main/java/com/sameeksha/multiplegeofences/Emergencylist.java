@@ -47,7 +47,7 @@ public class Emergencylist extends AppCompatActivity {
 
         setContentView(R.layout.activity_emergencylist);
         this.setTitle("Emergency Contact List");
-
+        Toast.makeText(Emergencylist.this,"Tip: Long Press to remove from emergency contacts",Toast.LENGTH_LONG).show();
 
 
 //l2.setAdapter(arrayAdapter);
@@ -55,7 +55,7 @@ public class Emergencylist extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
         childdatabasereference = databaseReference.child("Emergency contacts");
 
-        arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, arrayList);
+        arrayAdapter = new ArrayAdapter<String>(this, R.layout.modification_list, arrayList);
         l2 = findViewById(R.id.emergencylistview);
         l2.setAdapter(arrayAdapter);
      //   btndel = findViewById(R.id.delbutton);
